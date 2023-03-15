@@ -48,7 +48,7 @@ export class Posts {
         return this.content
     }
 
-    public setContent(value: string): void {
+    public setContent(value: string) {
         this.content = value
     }
 
@@ -56,7 +56,7 @@ export class Posts {
         return this.likes
     }
 
-    public setLikes(value: number): void {
+    public setLikes(value: number) {
         this.likes = value
     }
 
@@ -64,7 +64,7 @@ export class Posts {
         return this.dislikes
     }
 
-    public setDislikes(value: number): void {
+    public setDislikes(value: number) {
         this.dislikes = value
     }
 

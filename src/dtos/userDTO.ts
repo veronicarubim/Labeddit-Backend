@@ -1,4 +1,4 @@
-import { PostsModel } from "../types"
+import { CommentsModel, PostsModel } from "../types"
 
 // ENDPOINTS: 
 
@@ -63,3 +63,33 @@ import { PostsModel } from "../types"
     token: string | undefined,
     like: unknown
   }
+
+/* Comentários */
+ //GET
+ 
+  export interface GetCommentsInputDTO {
+    token: string | undefined,
+    postId: string,
+  }
+
+  export type GetCommentsOutputDTO = CommentsModel[]
+
+  // CREATE
+
+  export interface CreateCommentsInputDTO {
+    token: string | undefined,
+    postId: string,
+    content: string
+  }
+
+  // DELETE
+
+  export interface DeleteCommentsInputDTO {
+    PostidToDelete: string,
+    token: string | undefined
+  }
+
+  export interface likeDislikeCommentnputDTO {
+
+  }
+

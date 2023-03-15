@@ -64,3 +64,29 @@ export enum POST_LIKE {
     ALREADY_DISLIKED = "ALREADY_DISLIKED"
 }
 
+export interface CommentsModel {
+    id: string,
+    postId: string,
+    userId: string,
+    content: string,
+    likes: number,
+    dislikes: number,
+    createdAt: string,
+    creator: {
+        name: string
+    }
+}
+
+export interface CommentsDB {
+    id: string, 
+    post_id: string, 
+    user_id: string,
+    content: string, 
+    likes: number, 
+    dislikes: number, 
+    created_at: string, 
+}
+
+export interface CommentsWithCreatorsDB extends CommentsDB{
+    creator_name: string,
+}
