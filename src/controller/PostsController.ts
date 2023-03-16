@@ -15,6 +15,8 @@ export class PostsController {
             }
 
             const output = await this.postsBusiness.getPosts(input)
+
+            console.log(output)
         
             res.status(200).send(output)
             
@@ -32,7 +34,7 @@ export class PostsController {
         try {
             const input: CreatePostsInputDTO = {
                 token: req.headers.authorization,
-                content: req.body.content
+                content: req.body.content,
             }
 
             await this.postsBusiness.createPosts(input)

@@ -41,6 +41,7 @@ export class CommentsDatabase extends BaseDatabase {
         )
         .join("users","comments.user_id","=","users.id")
         .join("posts","comments.post_id","=","posts.id")
+        .where("comments.posts_id", postId)
 
         return result
     }        

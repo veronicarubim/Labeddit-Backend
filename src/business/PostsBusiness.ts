@@ -33,6 +33,8 @@ export class PostsBusiness {
         const postsWithCreatorsDB: PostsWithCreatorsDB[] 
         = await this.postsDatabase
             .getPostsWithCreators()
+            
+            console.log(postsWithCreatorsDB)
 
         const posts = postsWithCreatorsDB.map(
             (postsWithCreatorsDB) => {

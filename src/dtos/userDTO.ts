@@ -85,7 +85,7 @@ import { CommentsModel, PostsModel } from "../types"
   // DELETE
 
   export interface DeleteCommentsInputDTO {
-    PostidToDelete: string,
+    id: string,
     token: string | undefined
   }
 

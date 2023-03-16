@@ -47,12 +47,6 @@ CREATE TABLE comments (
         ON DELETE CASCADE
 );
 
-CREATE TABLE post_comments (
-  post_id INTEGER,
-  comment_id INTEGER,
-  FOREIGN KEY (post_id) REFERENCES posts(id),
-  FOREIGN KEY (comment_id) REFERENCES comment(id)
-);
 
 INSERT INTO comments (id, post_id, user_id, content)
 VALUES 
@@ -117,3 +111,19 @@ DELETE FROM posts;
 DELETE FROM users; 
 
 DELETE FROM comments; 
+
+SELECT
+    comments.id,
+    comments.user_id,
+    comments.content,
+    comments.likes,
+    comments.dislikes,
+    comments.created_at,
+    users.name AS creator_name
+FROM comments
+JOIN users
+ON comments.user_id = users.id
+JOIN posts
+ON comments.post_id = posts.id
+WHERE
+   post_id = "p1";

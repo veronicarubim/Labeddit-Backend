@@ -34,4 +34,6 @@ postsRouter.put("/:id", postsController.editPosts)
 postsRouter.delete("/:id", postsController.deletePosts)
 postsRouter.put("/:id/like", postsController.likeOrDislikePosts)
 
-postsRouter.get("/posts/comments", commentsController.getComments)
+postsRouter.get("/comments/:postId", commentsController.getComments)
+postsRouter.post("/comments/:postId", commentsController.createComments)
+postsRouter.delete("/comments/:id", commentsController.deleteComments)
