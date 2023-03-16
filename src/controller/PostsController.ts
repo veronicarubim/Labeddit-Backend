@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { PostsBusiness } from "../business/PostsBusiness";
-import { CreatePostsInputDTO, DeletePostsInputDTO, EditPostsInputDTO, GetPostsInputDTO, LikeOrDislikePostsInputDTO } from "../dtos/userDTO";
+import { CreatePostsInputDTO, DeletePostsInputDTO, EditPostsInputDTO, GetCommentsInputDTO, GetPostsInputDTO, LikeOrDislikePostsInputDTO } from "../dtos/userDTO";
 import { BaseError } from "../errors/BaseError";
 
 export class PostsController {
@@ -15,6 +15,8 @@ export class PostsController {
             }
 
             const output = await this.postsBusiness.getPosts(input)
+
+            console.log(output)
         
             res.status(200).send(output)
             
@@ -32,7 +34,7 @@ export class PostsController {
         try {
             const input: CreatePostsInputDTO = {
                 token: req.headers.authorization,
-                content: req.body.content
+                content: req.body.content,
             }
 
             await this.postsBusiness.createPosts(input)
@@ -95,10 +97,12 @@ export class PostsController {
                 idToLikeOrDislike: req.params.id,
                 token: req.headers.authorization,
                 like: req.body.like
-            }
-
+            } 
+            
             await this.postsBusiness.likeOrDislikePosts(input)
             res.status(200).end()
+
+            
             
           }  catch (error) {
           if (error instanceof BaseError) {
@@ -108,5 +112,6 @@ export class PostsController {
           }
       }
     }
+
 }
 

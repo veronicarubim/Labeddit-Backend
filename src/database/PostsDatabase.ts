@@ -81,7 +81,7 @@ export class PostsDatabase extends BaseDatabase {
             "users.name AS creator_name",
         )
         .join("users","posts.creator_id","=","users.id")
-        .where(`id = '${postsId}'`)
+        .where("posts.id", postsId)
 
         return result[0]
         
@@ -114,7 +114,7 @@ export class PostsDatabase extends BaseDatabase {
             })
     }
 
-    public removeLike = async (
+    /* public removeLike = async (
         likeDislikeDB: LikeDislikeDB): Promise<void> => {
             await BaseDatabase.connection(PostsDatabase.TABLE_LIKES_DISLIKES)
             .delete()
@@ -122,7 +122,7 @@ export class PostsDatabase extends BaseDatabase {
                 user_id: likeDislikeDB.user_id,
                 post_id: likeDislikeDB.post_id
             })
-    }
+    } */
     
     public updateLikeDislike = async (
         likeDislikeDB: LikeDislikeDB): Promise<void> => {

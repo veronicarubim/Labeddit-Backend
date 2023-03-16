@@ -1,5 +1,5 @@
 import { PostsDatabase } from "../database/PostsDatabase";
-import { CreatePostsInputDTO, DeletePostsInputDTO, EditPostsInputDTO, GetPostsInputDTO, GetPostsOutputDTO, LikeOrDislikePostsInputDTO } from "../dtos/userDTO";
+import { CreatePostsInputDTO, DeletePostsInputDTO, EditPostsInputDTO, GetCommentsInputDTO, GetCommentsOutputDTO, GetPostsInputDTO, GetPostsOutputDTO, LikeOrDislikePostsInputDTO } from "../dtos/userDTO";
 import { BadRequestError } from "../errors/BadRequestError";
 import { NotFoundError } from "../errors/NotFoundError";
 import { Posts } from "../models/Posts";
@@ -33,7 +33,7 @@ export class PostsBusiness {
         const postsWithCreatorsDB: PostsWithCreatorsDB[] 
         = await this.postsDatabase
             .getPostsWithCreators()
-
+            
             console.log(postsWithCreatorsDB)
 
         const posts = postsWithCreatorsDB.map(
@@ -214,10 +214,12 @@ export class PostsBusiness {
 
         const postsWithCreatorsDB = await this.postsDatabase
         .findPostsWithCreatorsById(idToLikeOrDislike)
+        console.log(postsWithCreatorsDB)
         
         if (!postsWithCreatorsDB) {
             throw new NotFoundError("id não encontrado")
         }
+
 
         const userId = payload.id
         const likeSQL = like? 1 : 0
@@ -242,6 +244,8 @@ export class PostsBusiness {
         const postLikeOrDislike = await this.postsDatabase
         .findLikeDislike(LikeDislikeDB)
 
+        console.log(postLikeOrDislike)
+
         if (postLikeOrDislike === POST_LIKE.ALREADY_LIKED) {
             if (like) {
                 await this.postsDatabase.removeLikeDislike(LikeDislikeDB)
@@ -249,7 +253,7 @@ export class PostsBusiness {
             } else {
                 await this.postsDatabase.updateLikeDislike(LikeDislikeDB)
                 post.removeLike()
-                post.addDislike
+                post.addDislike()
             }
 
         } else if (postLikeOrDislike === POST_LIKE.ALREADY_DISLIKED) {
@@ -260,8 +264,7 @@ export class PostsBusiness {
                 post.addLike()
             } else {
                 await this.postsDatabase.removeLikeDislike(LikeDislikeDB)
-                post.removeLike()
-                post.addDislike()
+                post.removeDislike()
             } 
 
         } else {
@@ -269,9 +272,9 @@ export class PostsBusiness {
             await this.postsDatabase.likeOrDislikePost(LikeDislikeDB)
 
         if (like) {
-            post.addLike
+            post.addLike()
         } else {
-            post.addDislike
+            post.addDislike()
         }
 
     } 
@@ -280,6 +283,7 @@ export class PostsBusiness {
 
         await this.postsDatabase.update(idToLikeOrDislike, updatePostDB)
 
-    }
+    }        
+    
 
 }

@@ -33,6 +33,26 @@ CREATE TABLE likes_dislikes (
         ON UPDATE CASCADE
 );
 
+CREATE TABLE comments (
+    id TEXT NOT NULL,
+    post_id TEXT NOT NULL, 
+    user_id TEXT NOT NULL,
+    content TEXT NOT NULL,
+    likes INTEGER DEFAULT (0) NOT NULL,
+    dislikes INTEGER DEFAULT (0) NOT NULL,
+    created_at TEXT DEFAULT (DATETIME()) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+        ON DELETE CASCADE
+    FOREIGN KEY (post_id) REFERENCES posts(id)
+        ON DELETE CASCADE
+);
+
+
+INSERT INTO comments (id, post_id, user_id, content)
+VALUES 
+("c001", "p1", "2", "Parabéns pelo artesanato!"),
+("c001", "p1", "3", "miau miau miau");
+
 INSERT INTO users (id, name, email, password, role)
 VALUES 
 ("1", "marta", "marta@gmail.com", "nymeria123", "NORMAL"),
@@ -57,6 +77,8 @@ SELECT * FROM posts;
 
 SELECT * FROM likes_dislikes;
 
+SELECT * FROM comments; 
+
 SELECT 
     posts.id,
     posts.creator_id,
@@ -78,6 +100,8 @@ DROP TABLE posts;
 
 DROP TABLE likes_dislikes;
 
+DROP TABLE comments;
+
 /*  */
 
 DELETE FROM likes_dislikes;
@@ -85,3 +109,21 @@ DELETE FROM likes_dislikes;
 DELETE FROM posts; 
 
 DELETE FROM users; 
+
+DELETE FROM comments; 
+
+SELECT
+    comments.id,
+    comments.user_id,
+    comments.content,
+    comments.likes,
+    comments.dislikes,
+    comments.created_at,
+    users.name AS creator_name
+FROM comments
+JOIN users
+ON comments.user_id = users.id
+JOIN posts
+ON comments.post_id = posts.id
+WHERE
+   post_id = "p1";
