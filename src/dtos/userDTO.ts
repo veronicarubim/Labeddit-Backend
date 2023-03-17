@@ -89,7 +89,9 @@ import { CommentsModel, PostsModel } from "../types"
     token: string | undefined
   }
 
-  export interface likeDislikeCommentnputDTO {
-
+  export interface likeDislikeCommentsInputDTO {
+    id: string,
+    token: string | undefined,
+    like: unknown
   }
 

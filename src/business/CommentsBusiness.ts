@@ -1,11 +1,11 @@
 import { CommentsDatabase } from "../database/CommentsDatabase"
-import { CreateCommentsInputDTO, DeleteCommentsInputDTO, GetCommentsInputDTO, GetCommentsOutputDTO, likeDislikeCommentnputDTO } from "../dtos/userDTO"
+import { CreateCommentsInputDTO, DeleteCommentsInputDTO, GetCommentsInputDTO, GetCommentsOutputDTO, likeDislikeCommentsInputDTO } from "../dtos/userDTO"
 import { BadRequestError } from "../errors/BadRequestError"
 import { NotFoundError } from "../errors/NotFoundError"
 import { Comments } from "../models/Comments"
 import { IdGenerator } from "../services/IdGenerator"
 import { TokenManager } from "../services/TokenManager"
-import { CommentsWithCreatorsDB, USER_ROLES } from "../types"
+import { CommentsWithCreatorsDB, COMMENT_LIKE, LikeDislikeCommentDB, USER_ROLES } from "../types"
 
 export class CommentsBusiness { 
     
@@ -18,6 +18,9 @@ export class CommentsBusiness {
    
     public getComments = async (input: GetCommentsInputDTO): Promise<GetCommentsOutputDTO> => {
         const {token, postId} = input
+
+        console.log(input)
+
         if (!token) {
             throw new BadRequestError("Token ausente")
         }
@@ -32,7 +35,7 @@ export class CommentsBusiness {
         = await this.commentsDatabase
             .getComments(postId)
 
-            console.log(commentsWithCreatorsDB)
+            console.log(commentsWithCreatorsDB) 
             
         const comments = commentsWithCreatorsDB.map(
             (commentsWithCreatorsDB) => {
@@ -46,8 +49,9 @@ export class CommentsBusiness {
                     commentsWithCreatorsDB.created_at,
                     commentsWithCreatorsDB.creator_name
                 )
+                /* console.log(comments); */
 
-                return comments.toBusinessModel()
+                return comments.toBusinessModel()       
                 
         })
 
@@ -132,7 +136,96 @@ export class CommentsBusiness {
         await this.commentsDatabase.delete(id)
     }
 
-    /* public likeDislikeComment = async (input: likeDislikeCommentnputDTO): Promise<void> => {
+     public likeDislikeComments = async (input: likeDislikeCommentsInputDTO): Promise<void> => {
 
-    } */
+            const {id, token, like} = input
+    
+            if (token === undefined) {
+                throw new BadRequestError("Token ausente")
+            }
+    
+            if (!token) {
+                throw new BadRequestError("Token ausente")
+            }
+    
+            const payload = this.tokenManager.getPayload(token)
+    
+            if (payload === null) {
+                throw new BadRequestError("Token inválido.")
+            }
+    
+            if (typeof like !== "boolean") {
+                throw new BadRequestError("Like deve ser boolean")
+            }
+            
+            const commentsWithCreatorsDB = await this.commentsDatabase
+            .findCommentsWithCreatorsById(id)
+            console.log(commentsWithCreatorsDB)
+
+            if (!commentsWithCreatorsDB) {
+                throw new NotFoundError("id não encontrado")
+            }
+
+            const userId = payload.id
+            const likeSQL = like? 1 : 0
+
+            const LikeDislikeCommentDB: LikeDislikeCommentDB = {
+                user_id: userId,
+                comment_id: commentsWithCreatorsDB.id,
+                like: likeSQL
+            }
+
+            const comments = new Comments(
+                commentsWithCreatorsDB.id, 
+                commentsWithCreatorsDB.post_id,
+                commentsWithCreatorsDB.user_id,
+                commentsWithCreatorsDB.content,
+                commentsWithCreatorsDB.likes,
+                commentsWithCreatorsDB.dislikes,
+                commentsWithCreatorsDB.created_at,
+                commentsWithCreatorsDB.creator_name,
+            )
+
+            const commentLikeOrDislike = await this.commentsDatabase
+            .findLikeDislike(LikeDislikeCommentDB)
+
+            console.log(commentLikeOrDislike)
+
+            if (commentLikeOrDislike === COMMENT_LIKE.ALREADY_LIKED) {
+                if (like) {
+                    await this.commentsDatabase.removeLikeDislike(LikeDislikeCommentDB)
+                    comments.removeLike()
+                } else {
+                    await this.commentsDatabase.updateLikeDislike(LikeDislikeCommentDB)
+                    comments.removeLike()
+                    comments.addDislike()
+                }
+            
+            } else if (commentLikeOrDislike === COMMENT_LIKE.ALREADY_DISLIKED) {
+
+                if (like) {
+                    await this.commentsDatabase.updateLikeDislike(LikeDislikeCommentDB)
+                    comments.removeDislike()
+                    comments.addLike()
+                } else {
+                    await this.commentsDatabase.removeLikeDislike(LikeDislikeCommentDB)
+                    comments.removeDislike()
+                } 
+    
+            } else {
+            
+                await this.commentsDatabase.likeOrDislikeComment(LikeDislikeCommentDB)
+    
+            if (like) {
+                comments.addLike()
+            } else {
+                comments.addDislike()
+            }
+        }
+
+        const updateCommentDB = comments.toDBModel()
+
+        await this.commentsDatabase.update(id, updateCommentDB)
+
+    } 
 }
