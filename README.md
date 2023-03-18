@@ -4,4 +4,4 @@
 
 Repositório do projeto fullstack da Labenu.
 
-
+Para acessar o frontend do projeto labeddit clique <a href="https://github.com/veronicarubim/Labeddit-Frontend">aqui</a>
