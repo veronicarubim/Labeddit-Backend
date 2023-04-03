@@ -6,7 +6,7 @@ export class TokenManagerMock {
         if (payload.role == USER_ROLES.NORMAL) {
             return "token-mock-normal"
         } else {
-            return "token-mock-normal"
+            return "token-mock-admin"
         }
     }
 

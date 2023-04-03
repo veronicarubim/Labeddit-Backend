@@ -1,7 +1,7 @@
 import { BaseDatabase } from "../../src/database/BaseDatabase"
 import { LikeDislikeDB, PostsDB, PostsWithCreatorsDB, POST_LIKE } from "../../src/types";
 
-export class PostDabaseMock extends BaseDatabase {
+export class PostsDatabaseMock extends BaseDatabase {
     public static TABLE_POSTS = "posts"
     public static TABLE_LIKES_DISLIKES = "likes_dislikes"
 
