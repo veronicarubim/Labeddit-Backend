@@ -1,4 +1,4 @@
--- Active: 1678299028759@@127.0.0.1@3306
+-- Active: 1679081232734@@127.0.0.1@3306
 CREATE TABLE users (
     id TEXT PRIMARY KEY UNIQUE NOT NULL,
     name TEXT NOT NULL,
@@ -27,14 +27,14 @@ CREATE TABLE likes_dislikes (
     like INTEGER NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id)
         ON DELETE CASCADE
-        ON UPDATE CASCADE
+        ON UPDATE CASCADE,
     FOREIGN KEY (post_id) REFERENCES posts(id)
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
 
 CREATE TABLE comments (
-    id TEXT NOT NULL,
+    id TEXT PRIMARY KEY UNIQUE NOT NULL,
     post_id TEXT NOT NULL, 
     user_id TEXT NOT NULL,
     content TEXT NOT NULL,
@@ -43,15 +43,28 @@ CREATE TABLE comments (
     created_at TEXT DEFAULT (DATETIME()) NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id)
         ON DELETE CASCADE
+        ON UPDATE CASCADE,
     FOREIGN KEY (post_id) REFERENCES posts(id)
         ON DELETE CASCADE
+        ON UPDATE CASCADE
 );
 
+CREATE TABLE likes_dislikes_comment (
+    user_id TEXT NOT NULL,
+    comment_id TEXT NOT NULL,
+    like INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (comment_id) REFERENCES comments(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
 
 INSERT INTO comments (id, post_id, user_id, content)
 VALUES 
 ("c001", "p1", "2", "Parabéns pelo artesanato!"),
-("c001", "p1", "3", "miau miau miau");
+("c002", "p1", "3", "miau miau miau");
 
 INSERT INTO users (id, name, email, password, role)
 VALUES 
@@ -102,6 +115,8 @@ DROP TABLE likes_dislikes;
 
 DROP TABLE comments;
 
+DROP TABLE likes_dislikes_comment;
+
 /*  */
 
 DELETE FROM likes_dislikes;
@@ -111,6 +126,9 @@ DELETE FROM posts;
 DELETE FROM users; 
 
 DELETE FROM comments; 
+
+DELETE FROM comments
+WHERE id = "4bcda35c-f947-4e4c-844b-17651a781e24";
 
 SELECT
     comments.id,
