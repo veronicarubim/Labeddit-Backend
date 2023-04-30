@@ -1,6 +1,8 @@
 # Labeddit-Backend
 
-<img src="https://pbs.twimg.com/media/FqtyOqyWYAE8FFp?format=jpg&name=4096x4096">
+<img src="https://pbs.twimg.com/media/Fu6_L5BWcAgi1pe?format=jpg&name=4096x4096" />
+
+Este projeto tem como objetivo criar uma simulação de rede social em que o usuário pode criar publicações, curti-las e comentá-las. A intenção por trás dessa rede social é promover a interação entre os usuários e criar um ambiente de interação e compartilhamento de ideias.
 
 Repositório do projeto fullstack da Labenu.
 
